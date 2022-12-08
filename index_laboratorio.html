@@ -1,0 +1,217 @@
+<html>
+  <head>
+  	<meta charset="UTF-8">
+    <title>Crud consorcio</title>
+	<link rel="stylesheet" href="css/bootstrap.min.css"/>
+	<link rel="stylesheet" href="css/bootstrap-theme.min.css"/>
+	<link rel="stylesheet" href="css/bootstrapValidator.min.css"/>
+	<link rel="stylesheet" href="css/bootstrap-datepicker.css"/>
+	<link rel="stylesheet" href="css/dataTables.bootstrap.min.css"/>
+	<link rel="stylesheet" href="css/bootstrapValidator.min.css"/>
+	<link rel="stylesheet" href="css/styles.css"/>
+	<script type="text/javascript" src="js/jquery.min.js"></script>
+	<script type="text/javascript" src="js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="js/bootstrapValidator.min.js"></script>
+	<script type="text/javascript" src="js/jquery.dataTables.min.js"></script>
+	<script type="text/javascript" src="js/dataTables.bootstrap.min.js"></script>
+	<script type="text/javascript" src="js/bootstrap-datepicker.min.js"></script>
+	<script type="text/javascript" src="sweetalert/sweetalert.min.js"></script>	
+ </head>
+ <body>
+	<div size="3" color="blue" face="Verdana" style=" font-size: 40px;font-family: 'Franklin Gothic Medium'; margin-left: 40px;">Navegación
+		<ul class="nav_ul">
+			<li class="nav"><a class="nav_text" href="index.html" title="">Medicamento</a></li>
+			<li class="nav"><a class="nav_text" href="index_cliente.html" title="">Cliente</a></li>
+			<li class="nav"><a class="nav_text" href="index_empleado.html" title="">Empleado</a></li>
+			<li class="nav"><a class="nav_text" href="index_laboratorio.html" title="">Laboratorio</a></li>
+			<li class="nav"><a class="nav_text" href="index_distrito.html" title="">Distrito</a></li>  
+		</ul> 
+	</div>
+
+	<div class="container">
+	  <h2>Listado de Laboratorio</h2>
+	 <button type="button" class="btn btn-primary" onclick="mostrarVentana()">Nuevo Laboratorio</button> <p><br>
+	  <table class="table table-bordered" id="id_table_medicamento">
+		<thead>
+		  <tr>
+			<th>Codigo</th>
+			<th>Nombre</th>
+
+			<th></th>
+			<th></th>
+		  </tr>
+		</thead>
+		<tbody>
+		</tbody>
+	  </table>
+	</div>
+	
+	<div id="id_modal_mantenimiento" class="modal fade" role="dialog">
+	  <div class="modal-dialog">
+		<!-- Modal content-->
+		<div class="modal-content">
+		  <div class="modal-header">			
+			<h4 class="modal-title">Laboratorio</h4>
+		  </div>
+		  <div class="modal-body">
+			<form action="#" id="id_mantenimiento">
+			<div class="form-group">
+				<label for="i_codigo">Codigo</label>
+				<input type="text" class="form-control" id="id_codigo" disabled>
+			  </div>
+			  <div class="form-group">
+				<label for="i_nombre">Nombre</label>
+				<input type="text" class="form-control" id="id_nombre" name="nombre">
+			  </div>
+			  
+			</form>
+		  </div>
+		  <div class="modal-footer">
+		    <button type="button" class="btn btn-primary" onclick="grabar()">Grabar</button>
+			<button type="button" class="btn btn-danger" id="resetBtn">Cerrar</button>
+		  </div>
+		</div>
+	  </div>
+	  
+	</div>
+  
+  <script>
+ 	 function mostrarVentana(){
+		$('#id_mantenimiento').data('bootstrapValidator').resetForm(true);
+		$("#id_mantenimiento").trigger("reset");
+		$("#id_codigo").val(0);
+		$("#id_modal_mantenimiento").modal({show:true,backdrop:'static',keyboard:false});
+	 }
+	 function tablaMedicamento(){
+			$.getJSON("http://localhost/proyecto/listaLaboratorio.php",
+					{},function(data){
+				//borrar la tabla	
+				$("#id_table_medicamento").DataTable().destroy();	
+				//limpiar filas de la tabla
+				$("#id_table_medicamento tbody").empty();
+					$.each(data,function(index,value){
+						var editar='<button type="button" class="btn btn-success" onclick="editar('+
+											value.codigo+')">Editar</button>';
+						var eliminar='<button type="button" class="btn btn-danger" onclick="eliminar('+
+											value.codigo+')">Eliminar</button>';
+						$("#id_table_medicamento").append("<tr><td>"+
+							value.codigo+"</td><td>"+value.nombre+"</td><td>"+
+							editar+"</td><td>"+eliminar+"</td></tr>");
+					});
+					//volver a generar la tabla(dibujar)
+					$("#id_table_medicamento").DataTable().draw();
+					//mostrar las caracteristicas Tabla
+					$("#id_table_medicamento").DataTable();
+			});
+			
+	 }
+	 function grabar(){
+		var validator = $('#id_mantenimiento').data('bootstrapValidator');
+        validator.validate();
+        if (validator.isValid()) {
+			var cod,nom, json;
+			cod=$("#id_codigo").val();
+			nom=$("#id_nombre").val();
+
+			json=JSON.stringify({codigo:cod,nombre:nom});
+	 
+			$.ajax({
+				url:'http://localhost/proyecto/registrarLaboratorio.php',
+				type:'GET',
+				data:{'data':json},
+				contentType:'application/json',
+				success:function(response){
+					tablaMedicamento();
+					$('#id_mantenimiento').data('bootstrapValidator').resetForm(true);
+					$("#id_mantenimiento").trigger("reset");
+					$("#id_modal_mantenimiento").modal("hide");
+				},
+				error:function(e){
+				
+				}
+			})
+		 }	
+	 }
+	 function editar(cod){
+		$.getJSON("http://localhost/proyecto/buscaLaboratorio.php",{codigo:cod},function(data){
+			$("#id_codigo").val(data.buscar.codigo);
+			$("#id_nombre").val(data.buscar.nombre);
+
+			$("#id_modal_mantenimiento").modal("show");
+		})
+	 }
+	 function eliminar(cod){
+		swal({
+			  title: "¿Estás seguro  que quieres que eliminemos este campo?",
+			  text: "Eliminaremos este Campo",
+			  icon: "warning",
+			  buttons: true,
+			  dangerMode: true,
+			})
+			.then((willDelete) => {
+			  if (willDelete) {
+				$.ajax({
+					url:'eliminaLaboratorio.php',
+					type:'GET',
+					data:{'codigo':cod},
+					contentType:'application/json',
+					success:function(response){
+						tablaMedicamento();
+						swal("La fila ha sido eliminada!", {icon: "success",});
+					},
+					error:function(e){
+					
+					}
+			
+				})
+			  } 
+			});
+	 }
+	 
+  </script>
+  <script>
+	$( document ).ready(function() {
+		tablaMedicamento();
+	
+		$('#resetBtn').click(function() {
+	        $('#id_mantenimiento').data('bootstrapValidator').resetForm(true);
+	        $('#id_modal_mantenimiento').modal("hide");
+	    }); 
+	});
+  </script>
+  <script type="text/javascript">
+	$(document).ready(function() {
+		//validar registra nuevo empleado
+		$('#id_mantenimiento').bootstrapValidator({
+			message: 'This value is not valid',
+			feedbackIcons: {
+				valid: 'glyphicon glyphicon-ok',
+				invalid: 'glyphicon glyphicon-remove',
+				validating: 'glyphicon glyphicon-refresh'
+			},
+			fields: {
+				nombre: {
+					validators: {
+						notEmpty: {
+							message: 'El campo Nombre es requerido. No puede estar vacio'
+						},
+						stringLength: {
+							min: 3,
+							max: 30,
+							message: 'El nombre debe contener minimo 3 y maximo de 30 letras'
+						},
+						//regexp: {
+							//regexp: /^[a-zA-Z\s\á\é\í\ó\ú\Á\É\Í\Ó\Ú\ñ\Ñ]+$/,
+							//message: 'El nombre sólo puede contener letras'
+				//		}
+					}
+				},
+			
+				
+		
+			}
+		});
+	});
+  </script>
+  </body>
+</html>

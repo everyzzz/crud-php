@@ -1,0 +1,3 @@
+SELECT tb_laboratorio.DES_LAB FROM tb_medicamento INNER JOIN tb_laboratorio ON tb_medicamento.COD_LAB=tb_laboratorio.COD_LAB
+
+SELECT tb_medicamento.COD_MED , tb_medicamento.NOM_MED ,tb_laboratorio.DES_LAB,tb_medicamento.STOCK_MED,tb_medicamento.PRE_MED,tb_medicamento.FEC_VEN_MED from tb_medicamento INNER JOIN tb_laboratorio ON tb_medicamento.COD_LAB=tb_laboratorio.COD_LAB

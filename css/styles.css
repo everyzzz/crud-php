@@ -1,0 +1,21 @@
+.nav{
+    background-color: #3073ad;
+    color:#000000;
+    border-radius: 10px;
+    
+    margin: 10px;
+    padding: 10px;
+}
+.nav_ul{
+    list-style: none;
+    display: flex;
+    font-size: 35px;
+}
+.nav_text{
+    color:white;
+    text-decoration: none;
+}
+.nav_text:hover{
+    color: #f8d304;
+    text-decoration: none;
+}

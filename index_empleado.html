@@ -1,0 +1,369 @@
+<html>
+  <head>
+  	<meta charset="UTF-8">
+    <title>Crud consorcio</title>
+	<link rel="stylesheet" href="css/bootstrap.min.css"/>
+	<link rel="stylesheet" href="css/bootstrap-theme.min.css"/>
+	<link rel="stylesheet" href="css/bootstrapValidator.min.css"/>
+	<link rel="stylesheet" href="css/bootstrap-datepicker.css"/>
+	<link rel="stylesheet" href="css/dataTables.bootstrap.min.css"/>
+	<link rel="stylesheet" href="css/bootstrapValidator.min.css"/>
+	<link rel="stylesheet" href="css/styles.css"/>
+	<script type="text/javascript" src="js/jquery.min.js"></script>
+	<script type="text/javascript" src="js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="js/bootstrapValidator.min.js"></script>
+	<script type="text/javascript" src="js/jquery.dataTables.min.js"></script>
+	<script type="text/javascript" src="js/dataTables.bootstrap.min.js"></script>
+	<script type="text/javascript" src="js/bootstrap-datepicker.min.js"></script>
+	<script type="text/javascript" src="sweetalert/sweetalert.min.js"></script>
+ </head>
+ <body>
+	<div size="3" color="blue" face="Verdana" style=" font-size: 40px;font-family: 'Franklin Gothic Medium'; margin-left: 40px;">Navegación
+		<ul class="nav_ul">
+			<li class="nav"><a class="nav_text" href="index.html" title="">Medicamento</a></li>
+			<li class="nav"><a class="nav_text" href="index_cliente.html" title="">Cliente</a></li>
+			<li class="nav"><a class="nav_text" href="index_empleado.html" title="">Empleado</a></li>
+			<li class="nav"><a class="nav_text" href="index_laboratorio.html" title="">Laboratorio</a></li>
+			<li class="nav"><a class="nav_text" href="index_distrito.html" title="">Distrito</a></li>  
+		</ul> 
+	</div>
+ 
+	<div class="container">
+	  <h2>Listado de Empleados</h2>
+	 <button type="button" class="btn btn-primary" onclick="mostrarVentana()">Nuevo Empleado</button> <p><br>
+	  <table class="table table-bordered" id="id_table_empleado">
+		<thead>
+		  <tr>
+			<th>Codigo</th>
+			<th>Nombre</th>
+			<th>Apellido</th>
+			<th>Sexo</th>
+			<th>Fecha de Registro</th>
+			<th>Fecha de Nacimiento</th>
+			<th>Direccion</th>
+			<th>Distrito</th>
+			<th></th>
+			<th></th>
+		  </tr>
+		</thead>
+		<tbody>
+		</tbody>
+	  </table>
+	</div>
+	
+	<div id="id_modal_mantenimiento" class="modal fade" role="dialog">
+	  <div class="modal-dialog">
+		<!-- Modal content-->
+		<div class="modal-content">
+		  <div class="modal-header">			
+			<h4 class="modal-title">Empleados</h4>
+		  </div>
+		  <div class="modal-body">
+			<form action="#" id="id_mantenimiento">
+			<div class="form-group">
+				<label for="i_codigo">Codigo</label>
+				<input type="text" class="form-control" id="id_codigo" disabled>
+			  </div>
+			  <div class="form-group">
+				<label for="i_nombre">Nombre</label>
+				<input type="text" class="form-control" id="id_nombre" name="nombre">
+			  </div>
+			  <div class="form-group">
+				<label for="i_stock">Apellido</label>
+				<input type="text" class="form-control" id="id_apellido" name="apellido">
+			  </div>
+			  <div class="form-group">
+				<label for="i_precio">Sexo</label>
+				<select class="form-control" id="id_sexo" name="sexo">
+					<option value=" ">[Seleccione]</option>
+					<option value=" ">Hombre</option>
+					<option value=" ">Mujer</option>
+					<option value=" ">Sin Especificar</option>
+				 </select>				
+			  </div>
+			  
+			  
+
+			<!-- 	date picker   -->  			  
+			<div class="form-group">
+			<label for="i_fecha">Fecha</label>
+			<div class='input-group date' id='datetimepicker1'>		  
+			<input type="text" class="form-control" id="id_fecha_registro" name="fecha_registro">
+				<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span>
+					</span>
+			</div>
+			</div>	
+
+  			<!-- 	fin date picker   -->	 
+  
+  
+  
+  			<!-- 	date picker   -->  					  
+			<div class="form-group">
+				<label for="i_fecha">Fecha</label>
+				<div class='input-group date' id='datetimepicker1'>		  
+					<input type="text" class="form-control" id="id_fecha_nacimiento" name="fecha_nacimiento">
+					<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+				</div>
+			</div>
+			<!-- 	fin date picker   -->	
+			  
+			  
+			 
+			   <div class="form-group">
+				<label for="i_fecha">Direccion</label>
+				<input type="text" class="form-control" id="id_direccion" name="direccion">
+			  </div>
+		  
+			  <div class="form-group">
+				<label for="i_laboratorio">Codigo de Distrito</label>
+				<select class="form-control" id="id_laboratorio" name="laboratorio">
+					<option value=" ">[Seleccione]</option>
+				 </select>
+			  </div>
+			  
+			</form>
+		  </div>
+		  <div class="modal-footer">
+		    <button type="button" class="btn btn-primary" onclick="grabar()">Grabar</button>
+			<button type="button" class="btn btn-danger" id="resetBtn">Cerrar</button>
+		  </div>
+		</div>
+	  </div>
+	  
+	</div>
+  
+  <script>
+ 	 function mostrarVentana(){
+		$('#id_mantenimiento').data('bootstrapValidator').resetForm(true);
+		$("#id_mantenimiento").trigger("reset");
+		$("#id_codigo").val(0);
+		$("#id_modal_mantenimiento").modal({show:true,backdrop:'static',keyboard:false});
+	 }
+	 function tablaMedicamento(){
+			$.getJSON("http://localhost/proyecto/listaEmpleado.php",
+					{},function(data){
+				//borrar la tabla	
+				$("#id_table_empleado").DataTable().destroy();	
+				//limpiar filas de la tabla
+				$("#id_table_empleado tbody").empty();
+					$.each(data,function(index,value){
+						var editar='<button type="button" class="btn btn-success" onclick="editar('+
+											value.codigo+')">Editar</button>';
+						var eliminar='<button type="button" class="btn btn-danger" onclick="eliminar('+
+											value.codigo+')">Eliminar</button>';
+						$("#id_table_empleado").append("<tr><td>"+
+							value.codigo+"</td><td>"+
+							value.nombre+"</td><td>"+
+							value.apellido+"</td><td>"+
+							value.sexo+"</td><td>"+
+							value.fecha_registro+"</td><td>"+
+							value.fecha_nacimiento+"</td><td>"+
+							value.direccion+"</td><td>"+
+							value.laboratorio+"</td><td>"+
+							editar+"</td><td>"+eliminar+"</td></tr>");
+					});
+					//volver a generar la tabla(dibujar)
+					$("#id_table_empleado").DataTable().draw();
+					//mostrar las caracteristicas Tabla
+					$("#id_table_empleado").DataTable();
+			});
+			
+	 }
+	 function grabar(){
+		var validator = $('#id_mantenimiento').data('bootstrapValidator');
+        validator.validate();
+        if (validator.isValid()) {
+			var cod,nom,lab,pre,sto,fec,json;
+			cod=$("#id_codigo").val();
+			nom=$("#id_nombre").val();
+			ape=$("#id_apellido").val();
+			sex=$("#id_sexo").val();
+			fr=$("#id_fecha_registro").val();
+			fn=$("#id_fecha_nacimiento").val();
+			dir=$("#id_direccion").val();			
+			lab=$("#id_laboratorio").val();
+			json=JSON.stringify({codigo:cod,nombre:nom,apellido:ape,sexo:sex,fecha_registro:fr,
+			fecha_nacimiento:fn,direccion:dir,laboratorio:lab});
+	 
+			$.ajax({
+				url:'http://localhost/proyecto/registrarEmpleado.php',
+				type:'GET',
+				data:{'data':json},
+				contentType:'application/json',
+				success:function(response){
+					tablaMedicamento();
+					$('#id_mantenimiento').data('bootstrapValidator').resetForm(true);
+					$("#id_mantenimiento").trigger("reset");
+					$("#id_modal_mantenimiento").modal("hide");
+				},
+				error:function(e){
+				
+				}
+			})
+		 }	
+	 }
+	 function editar(cod){
+		$.getJSON("http://localhost/proyecto/buscaEmpleado.php",{codigo:cod},function(data){
+			$("#id_codigo").val(data.buscar.codigo);
+			$("#id_nombre").val(data.buscar.nombre);
+			$("#id_apellido").val(data.buscar.apellido);
+			$("#id_sexo").val(data.buscar.sexo);
+			$("#id_fecha_registro").val(data.buscar.fecha_registro);
+			$("#id_fecha_nacimiento").val(data.buscar.fecha_nacimiento);
+			$("#id_direccion").val(data.buscar.direccion);
+			$("#id_laboratorio").val(data.buscar.laboratorio);		
+			$("#id_modal_mantenimiento").modal("show");
+		})
+	 }
+	 function eliminar(cod){
+		swal({
+			  title: "¿Estas seguro que quieres eliminar este registro?",
+			  text: "Eliminaremos este campo",
+			  icon: "warning",
+			  buttons: true,
+			  dangerMode: true,
+			})
+			.then((willDelete) => {
+			  if (willDelete) {
+				$.ajax({
+					url:'eliminaEmpleado.php',
+					type:'GET',
+					data:{'codigo':cod},
+					contentType:'application/json',
+					success:function(response){
+						tablaMedicamento();
+						swal("¡La fila ha sido eliminada!", {icon: "success",});
+					},
+					error:function(e){
+					
+					}
+			
+				})
+			  } 
+			});
+	 }
+	 function comboLaboratorio(){
+			$.getJSON("http://localhost/proyecto/listaDistrito.php",{},function(data){
+					$.each(data,function(index,value){
+						$("#id_laboratorio").append("<option value='"+
+							value.codigo+"'>"+value.nombre+"</option>");
+					});
+			});	
+	 }
+  </script>
+  <script>
+	$( document ).ready(function() {
+		tablaMedicamento();
+		comboLaboratorio();
+		$('#resetBtn').click(function() {
+	        $('#id_mantenimiento').data('bootstrapValidator').resetForm(true);
+	        $('#id_modal_mantenimiento').modal("hide");
+	    }); 
+	});
+  </script>
+  <script type="text/javascript">
+	$(document).ready(function() {
+		//validar registra nuevo empleado
+		$('#id_mantenimiento').bootstrapValidator({
+			message: 'This value is not valid',
+			feedbackIcons: {
+				valid: 'glyphicon glyphicon-ok',
+				invalid: 'glyphicon glyphicon-remove',
+				validating: 'glyphicon glyphicon-refresh'
+			},
+			fields: {
+				nombre: {
+					validators: {
+						notEmpty: {
+							message: 'El campo Nombre es requerido. No puede estar vacio'
+						},
+						stringLength: {
+							min: 2,
+							max: 30,
+							message: 'El nombre debe contener minimo 3 y maximo de 30 letras'
+						},
+						regexp: {
+							regexp: /^[a-zA-Z\s\á\é\í\ó\ú\Á\É\Í\Ó\Ú\ñ\Ñ]+$/,
+							message: 'El nombre sólo puede contener letras'
+						}
+					}
+				},
+				apellido:{
+					validators:{
+						notEmpty: {
+							message: 'Seleccione campo Apellido. No puede estar vacio'
+						},
+						stringLength: {
+							min: 2,
+							max: 30,
+							message: 'El Apellido debe contener minimo 3 y maximo de 30 letras'
+						},
+						regexp: {
+							regexp: /^[a-zA-Z\s\á\é\í\ó\ú\Á\É\Í\Ó\Ú\ñ\Ñ]+$/,
+							message: 'El nombre sólo puede contener letras'
+						}
+					}
+				},
+				sexo:{
+					validators:{
+						regexp: {
+							regexp: /^[a-zA-Z\s\á\é\í\ó\ú\Á\É\Í\Ó\Ú\ñ\Ñ]+$/,
+							message: 'El nombre sólo puede contener letras'
+						}
+					}
+				},
+				direccion:{
+					validators:{
+						notEmpty: {
+							message: 'El campo Direccion es requerido. No puede estar vacio'
+						},
+				
+						
+					}
+				},
+				fecha_registro:{
+					validators:{
+					
+						regexp: {
+							regexp:  /^(19|20)\d\d[\-\/.](0[1-9]|1[012])[\-\/.](0[1-9]|[12][0-9]|3[01])$/, 
+					
+					message: 'El Campo Fecha formato fecha'
+				}
+					}
+				},
+				fecha_nacimiento:{
+					validators:{
+						regexp: {
+							regexp:  /^(19|20)\d\d[\-\/.](0[1-9]|1[012])[\-\/.](0[1-9]|[12][0-9]|3[01])$/, 
+					
+					message: 'El Campo Fecha formato fecha'
+				}
+					}
+				},
+				
+				laboratorio:{
+					validators:{
+						notEmpty: {
+							message: 'Seleccione campo Distrito. No puede estar vacio'
+						},
+						
+					}
+				},
+		
+			}
+		});
+	});
+  </script>
+  
+    <!-- 	date picker   -->
+     <script type="text/javascript">
+   $( function() {
+    $( "#id_fecha_registro" ).datepicker({format:"yyyy/mm/dd"});
+	$( "#id_fecha_nacimiento" ).datepicker({format:"yyyy/mm/dd"});
+  } );
+  </script>
+  <!-- fin 	date picker   -->
+  
+  </body>
+</html>
