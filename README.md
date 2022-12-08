@@ -11,6 +11,7 @@ Example: <br>
 C:\xampp <br>
 
 <h3> 3- Move the project folder inside the htdocs folder </h3>
+Example: <br>
 C:\xampp\htdocs\<<projectname>projectname>
 
 <h3> 4- Open xampp-control.exe in C:\xampp\ and run services </h3>
