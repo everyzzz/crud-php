@@ -1,4 +1,4 @@
-<h1> Configuration </h1>
+<h1> Configuration on a Local Server </h1>
 
 <h3> 1- Download Wampserver | XAMPP </h3>
 Link Wampserver: <br>
